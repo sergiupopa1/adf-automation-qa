@@ -36,16 +36,11 @@ namespace QA_exercise.Pages
         private IWebElement Notification =>
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("snack-bar-container")));
         private IWebElement DeleteButton =>
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[data-automation-id='DOCUMENT_LIST.ACTIONS.FOLDER.DELETE']")));
-        private IWebElement ActionMenuButton =>
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("action_menu_right_0")));
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[data-automation-id='DOCUMENT_LIST.ACTIONS.FOLDER.DELETE']")));        
         private IWebElement CancelButton =>
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("adf-folder-cancel-button")));
-        private IWebElement UserInfo =>
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("userinfo_container")));
-
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.Id("adf-folder-cancel-button")));        
         private IReadOnlyCollection<IWebElement> FilesTableElements => 
-            _wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.CssSelector("adf-datatable-row[aria-label]")));
+            _wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.XPath("//adf-datatable-row[@aria-label]")));
 
         public string GetFileNameElementAt(int number) => FilesTableElements.ElementAt(number).GetAttribute("aria-label");
         public void ClickFileNameElementAt(int number) => FilesTableElements.ElementAt(number).Click();
@@ -55,14 +50,23 @@ namespace QA_exercise.Pages
         public void ClickCreateButton() => CreateButton.Click();        
         public void FillNewFolderNameInput(string name) => NewFolderNameInput.SendKeys(name);
         public string GetNewFolderNameInput() => NewFolderNameInput.GetAttribute("value");
-        public string GetNotificationText() => Notification.Text;
-        public void ClickActionMenuButton() => ActionMenuButton.Click();
+        public string GetNotificationText() => Notification.Text;        
         public void ClickDeleteButton() => DeleteButton.Click();
-        public void ClickCancelButton() => CancelButton.Click();
-        public bool CheckHomePageIsDisplayed() => UserInfo.Displayed;
+        public void ClickCancelButton() => CancelButton.Click();        
         public bool CheckNewFolderDialogIsDisplayed() => NewFolderDialog.Displayed;
         public bool CheckNewFolderDialogIsNotDisplayed() => _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("mat-dialog-container[aria-modal='true']")));
-        
+
+        public void ClickActionMenuButtonForFolderName(string folderName)
+        {
+            for (var i = 0; i < FilesTableElements.Count; i++)
+            {
+                if (GetFileNameElementAt(i).Contains(folderName))
+                {
+                    FilesTableElements.ElementAt(i).FindElement(By.XPath(".//button[@aria-label='Actions']")).Click();
+                    break;
+                }
+            }
+        }        
         public void SelectFolderByName(string folderName)
         {
             try

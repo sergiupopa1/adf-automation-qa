@@ -146,7 +146,7 @@ namespace QA_exercise
         [Then(@"Open Options window")]
         public void ThenOpenOptionsWindow()
         {
-            _applicationPage.ClickActionMenuButton();
+            _applicationPage.ClickActionMenuButtonForFolderName(UserName);
         }
         
         [Then(@"Click Delete")]
